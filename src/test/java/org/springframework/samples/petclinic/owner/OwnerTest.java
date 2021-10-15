@@ -5,19 +5,18 @@ import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
-import org.springframework.beans.support.MutableSortDefinition;
-import org.springframework.beans.support.PropertyComparator;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(Theories.class)
-class OwnerTest {
+public class OwnerTest {
 	 Owner owner;
 
 	// Set up - Called before every test method.
@@ -142,10 +141,7 @@ class OwnerTest {
 	public static Pet[] data_points1()
 	{
 		Pet[] pets = new Pet[]{ new Pet(), new Pet(), new Pet()};
-		pets[0].setId(11);
-		pets[1].setId(88);
-		pets[2].setId(24);
-		pets[0].setName("Esi");
+		pets[0].setName("esi");
 		pets[1].setName("Messi");
 		pets[2].setName("asdf");
 		return pets;
@@ -155,26 +151,28 @@ class OwnerTest {
 	public static Pet[] data_points2()
 	{
 		Pet[] pets = new Pet[]{ new Pet(), new Pet(), new Pet()};
-		pets[0].setId(22);
-		pets[1].setId(68);
 		pets[0].setName("mosi");
 		pets[1].setName("kaftar-kakol-besar");
+		pets[2].setName("hihi");
 		return pets;
 	}
 
 	@Theory
-	public void Theorize_get_pets_test(Pet p1, Pet p2)
+	public void Theorize_get_pet_test(Pet p1, Pet p2)
 	{
 		Owner myowner = new Owner();
-		List<Pet> pets = new ArrayList<>();
+		Set<Pet> pets = new HashSet<>();
+
 		pets.add(p1);
 		pets.add(p2);
 
 		for (Pet p : pets)
 			myowner.addPet(p);
 
-		pets = pets.stream().distinct().collect(Collectors.toList());
-		PropertyComparator.sort(pets, new MutableSortDefinition("name", false, false));
-		assertEquals(pets, myowner.getPets());
+		for (Pet p : pets)
+		{
+			String name = p.getName();
+			assertNotNull(myowner.getPet(name));
+		}
 	}
 }
