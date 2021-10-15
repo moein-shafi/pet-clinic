@@ -1,18 +1,28 @@
 package org.springframework.samples.petclinic.owner;
 
+import org.junit.experimental.theories.DataPoints;
+import org.junit.experimental.theories.Theories;
+import org.junit.experimental.theories.Theory;
 import org.junit.jupiter.api.*;
+import org.junit.runner.RunWith;
+import org.springframework.beans.support.MutableSortDefinition;
+import org.springframework.beans.support.PropertyComparator;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@RunWith(Theories.class)
 class OwnerTest {
-	Owner owner;
+	 Owner owner;
+
 	// Set up - Called before every test method.
 	@BeforeEach
-	public void setUp()
-	{
+	public void setUp() {
 		owner = new Owner();
 		owner.setFirstName("George");
 		owner.setLastName("Franklin");
@@ -23,41 +33,38 @@ class OwnerTest {
 
 	// Tear down - Called after every test method.
 	@AfterEach
-	public void tearDown()
-	{
+	public void tearDown() {
 		owner = null;
 	}
 
 	@Test
-	void adding_one_pet_should_add_pet_to_its_owner()
-	{
+	void adding_one_pet_should_add_pet_to_its_owner() {
 		Pet mypet = new Pet();
-	    mypet.setOwner(owner);
-	    mypet.setName("petti");
-	    owner.addPet(mypet);
+		mypet.setOwner(owner);
+		mypet.setName("petti");
+		owner.addPet(mypet);
 		assertEquals(mypet, owner.getPet("petti"));
 	}
 
 	@Test
-	void getting_pets_should_return_pet_list_alphabetically()
-	{
+	void getting_pets_should_return_pet_list_alphabetically() {
 		Pet mypet1 = new Pet();
-	    mypet1.setOwner(owner);
-	    mypet1.setName("essi");
+		mypet1.setOwner(owner);
+		mypet1.setName("essi");
 
 		Pet mypet2 = new Pet();
-	    mypet2.setOwner(owner);
-	    mypet2.setName("petti");
+		mypet2.setOwner(owner);
+		mypet2.setName("petti");
 
 		Pet mypet3 = new Pet();
-	    mypet3.setOwner(owner);
-	    mypet3.setName("asghar");
+		mypet3.setOwner(owner);
+		mypet3.setName("asghar");
 
-	    owner.addPet(mypet1);
-	    owner.addPet(mypet2);
-	    owner.addPet(mypet3);
+		owner.addPet(mypet1);
+		owner.addPet(mypet2);
+		owner.addPet(mypet3);
 
-	    List<Pet> mypets = new ArrayList<>();
+		List<Pet> mypets = new ArrayList<>();
 
 		mypets.add(mypet3);
 		mypets.add(mypet1);
@@ -67,8 +74,7 @@ class OwnerTest {
 	}
 
 	@Test
-	void removing_one_pet_should_delete_pet_from_hashset()
-	{
+	void removing_one_pet_should_delete_pet_from_hashset() {
 		Pet my_pet = new Pet();
 		my_pet.setName("shafi");
 		owner.addPet(my_pet);
@@ -77,22 +83,17 @@ class OwnerTest {
 	}
 
 	@Test
-	void removing_non_existing_pet_should_not_throw_any_exception()
-	{
+	void removing_non_existing_pet_should_not_throw_any_exception() {
 		Pet my_pet = new Pet();
-		try
-		{
+		try {
 			owner.removePet(my_pet);
-		}
-		catch(Exception exception)
-		{
+		} catch (Exception exception) {
 			fail();
 		}
 	}
 
 	@Test
-	void getting_with_ignoreNew_should_not_return_new_pet()
-	{
+	void getting_with_ignoreNew_should_not_return_new_pet() {
 		Pet my_pet = new Pet();
 		my_pet.setName("shafi");
 		owner.addPet(my_pet);
@@ -100,8 +101,7 @@ class OwnerTest {
 	}
 
 	@Test
-	void getting_with_ignoreNew_should_return_old_pet()
-	{
+	void getting_with_ignoreNew_should_return_old_pet() {
 		Pet my_pet = new Pet();
 		my_pet.setName("shafi");
 		owner.addPet(my_pet);
@@ -110,8 +110,7 @@ class OwnerTest {
 	}
 
 	@Test
-	void adding_old_pet_should_not_be_added_to_pet_list_of_owner()
-	{
+	void adding_old_pet_should_not_be_added_to_pet_list_of_owner() {
 		Pet my_pet = new Pet();
 		my_pet.setName("shafi");
 		my_pet.setId(22);
@@ -120,8 +119,7 @@ class OwnerTest {
 	}
 
 	@Test
-	void getting_pet_with_different_capitalized_letters_should_work()
-	{
+	void getting_pet_with_different_capitalized_letters_should_work() {
 		Pet my_pet = new Pet();
 		my_pet.setName("essi");
 
@@ -130,8 +128,7 @@ class OwnerTest {
 	}
 
 	@Test
-	void adding_one_pet_multiple_times_should_add_just_one_time()
-	{
+	void adding_one_pet_multiple_times_should_add_just_one_time() {
 		Pet my_pet = new Pet();
 		my_pet.setName("essi");
 
@@ -139,5 +136,45 @@ class OwnerTest {
 		owner.addPet(my_pet);
 		owner.addPet(my_pet);
 		assertEquals(1, owner.getPets().size());
+	}
+
+	@DataPoints
+	public static Pet[] data_points1()
+	{
+		Pet[] pets = new Pet[]{ new Pet(), new Pet(), new Pet()};
+		pets[0].setId(11);
+		pets[1].setId(88);
+		pets[2].setId(24);
+		pets[0].setName("Esi");
+		pets[1].setName("Messi");
+		pets[2].setName("asdf");
+		return pets;
+	}
+
+	@DataPoints
+	public static Pet[] data_points2()
+	{
+		Pet[] pets = new Pet[]{ new Pet(), new Pet(), new Pet()};
+		pets[0].setId(22);
+		pets[1].setId(68);
+		pets[0].setName("mosi");
+		pets[1].setName("kaftar-kakol-besar");
+		return pets;
+	}
+
+	@Theory
+	public void Theorize_get_pets_test(Pet p1, Pet p2)
+	{
+		Owner myowner = new Owner();
+		List<Pet> pets = new ArrayList<>();
+		pets.add(p1);
+		pets.add(p2);
+
+		for (Pet p : pets)
+			myowner.addPet(p);
+
+		pets = pets.stream().distinct().collect(Collectors.toList());
+		PropertyComparator.sort(pets, new MutableSortDefinition("name", false, false));
+		assertEquals(pets, myowner.getPets());
 	}
 }
