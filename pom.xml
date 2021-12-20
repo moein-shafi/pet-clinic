@@ -169,6 +169,14 @@
       <version>4.5.12</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/io.spring.javaformat/spring-javaformat-formatter -->
+    <dependency>
+      <groupId>io.spring.javaformat</groupId>
+      <artifactId>spring-javaformat-formatter</artifactId>
+      <version>0.0.28</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -248,13 +256,13 @@
         <version>${pitest.version}</version>
         <configuration>
           <targetClasses>
-            <param>org.springframework.samples.petclinic.owner.VisitController</param>
+            <param>org.springframework.samples.petclinic.utility.PriceCalculator</param>
           </targetClasses>
           <targetTests>
-            <param>org.springframework.samples.petclinic.owner.VisitControllerTests</param>
+            <param>org.springframework.samples.petclinic.utility.PriceCalculatorTest</param>
           </targetTests>
           <mutators>
-            <mutator>ROR</mutator>
+            <mutator>ALL</mutator>
           </mutators>
         </configuration>
         <dependencies>
