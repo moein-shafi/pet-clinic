@@ -3,6 +3,7 @@ package bdd;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.owner.*;
 
@@ -18,89 +19,82 @@ public class PetServiceFeatureSteps {
 	@Autowired
 	PetRepository petRepository;
 
-	@Autowired
-	PetTypeRepository petTypeRepository;
-
 	private Owner myOwner;
 	private Pet myPet;
-	private Pet myNewPet;
-	private Owner foundOwner;
-	private PetType petType;
 
 	@Given("There exists an owner with id equal to {int}")
-	public void thereIsOwnerWithId(int id) {
+	public void ThereExistsAnOwnerWithId(int id) {
 		assertNotNull(ownerRepository.findById(id));
 	}
 
 	@When("User wants to find the owner with id equal to {int}")
-	public void findAccountWithId(int id) {
-		foundOwner = petService.findOwner(id);
+	public void UserWantsToFindTheOwnerWithIdEqualTo(int id) {
+		myOwner = petService.findOwner(id);
 	}
 
 	@Then("The owner with id equal to {} will return")
-	public void accountIsFound(int id) {
-		assertNotNull(foundOwner);
-		assertEquals(java.util.Optional.of(id), foundOwner.getId());
+	public void TheOwnerWithIdEqualToWillReturn(int id) {
+		assertNotNull(myOwner);
+		assertEquals(java.util.Optional.of(id), myOwner.getId());
 	}
 
 	@Given("There exists no owner with id equal to {int}")
-	public void thereIsNoOwnerWithId(int id) {
+	public void ThereExistsNoOwnerWithIdEqualTo(int id) {
 		assertNull(ownerRepository.findById(id));
 	}
 
 	@Then("NULL owner will return")
-	public void noOwnerIsFound() {
-		assertNull(foundOwner);
+	public void NULLOwnerWillReturn() {
+		assertNull(myOwner);
 	}
 
 
 	@Given("There exists a pet with id equal to {int}")
-	public void thereIsAPetWithId(int id) {
+	public void ThereExistsAPetWithIdEqualTo(int id) {
 		assertNotNull(petRepository.findById(id));
 	}
 
 	@Given("There exists no pet with id equal to {int}")
-	public void thereIsNoPetWithId(int id) {
+	public void ThereExistsNoPetWithIdEqualTo(int id) {
 		assertNull(petRepository.findById(id));
 	}
 
 	@When("User wants to find the pet with id equal to {int}")
-	public void findPetWithId(int id) {
+	public void UserWantsToFindThePetWithIdEqualTo(int id) {
 		myPet = petService.findPet(id);
 	}
 
 	@Then("The pet with id equal to {} will return")
-	public void petIdReturned(int id) {
+	public void ThePetWithIdEqualToWillReturn(int id) {
 		assertNotNull(myPet);
 		assertEquals(java.util.Optional.of(id), myPet.getId());
 	}
 
 	@Then("NULL pet will return")
-	public void noPetIsFound() {
+	public void NULLPetWillReturn() {
 		assertNull(myPet);
 	}
 
 	@Given("There exists an owner named {string}")
-	public void myOwner(String ownerName) {
+	public void ThereExistsAnOwnerNamed(String ownerName) {
 		myOwner = new Owner();
 		myOwner.setFirstName(ownerName);
 		ownerRepository.save(myOwner);
 	}
 
 	@When("He wants a new pet")
-	public void myOwnerAsksFormyNewPet() {
-		myNewPet = petService.newPet(myOwner);
+	public void HeWantsANewPet() {
+		myPet = petService.newPet(myOwner);
 	}
 
 	@When("He adds a pet to his list")
-	public void myOwnerPerformsSavePetService() {
-		myNewPet = new Pet();
-		myNewPet.setType(petType);
-		petService.savePet(myNewPet, myOwner);
+	public void HeAddsAPetToHisList() {
+		myPet = new Pet();
+		petService.savePet(myPet, myOwner);
 	}
 
 	@Then("The pet is saved successfully")
-	public void thePetIsSaved() {
-		assertNotNull(petService.findPet(myNewPet.getId()));
+	public void ThePetIsSavedSuccessfully() {
+		assertNotNull(petService.findPet(myPet.getId()));
 	}
 }
